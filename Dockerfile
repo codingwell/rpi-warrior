@@ -7,7 +7,7 @@ ENV HOME /root
 
 # Install dependencies
 RUN apt-get update \
- && apt-get install -y python-pip git sudo net-tools isc-dhcp-client python-software-properties wget liblua5.1-0 python-dev \
+ && apt-get install -y python-pip git sudo python-software-properties wget liblua5.1-0 \
  && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ADD get-wget-lua.sh /
@@ -15,7 +15,7 @@ ADD get-wget-lua.sh /
 RUN apt-get update \
  && apt-get install -y libssl-dev liblua5.1-0-dev autoconf flex pkg-config bzip2 gcc make \
  && chmod +x /get-wget-lua.sh && bash -c "/get-wget-lua.sh" \
- && apt-get remove -y libssl-dev liblua5.1-0-dev autoconf flex pkg-config bzip2 gcc make \
+ && apt-get purge -y libssl-dev liblua5.1-0-dev autoconf flex pkg-config bzip2 gcc make \
  && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Fix dnsmasq bug (see https://github.com/nicolasff/docker-cassandra/issues/8#issuecomment-36922132)
@@ -27,7 +27,8 @@ RUN echo "warrior ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN mkdir /home/warrior && chown warrior: /home/warrior
 
 # Clone warrior code
-RUN (cd /home/warrior && sudo -u warrior git clone -b docker https://github.com/ArchiveTeam/warrior-code2.git)
+# The use of sh is to re-taint the shell with qemu
+RUN (cd /home/warrior && sudo -u warrior /bin/sh -c 'git clone -b docker https://github.com/ArchiveTeam/warrior-code2.git')
 
 # Expose web interface port
 EXPOSE 8001
