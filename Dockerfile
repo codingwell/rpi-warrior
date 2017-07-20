@@ -27,7 +27,7 @@ RUN echo "warrior ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN mkdir /home/warrior && chown warrior: /home/warrior
 
 # Clone warrior code
-RUN (cd /home/warrior && git clone -b docker https://github.com/ArchiveTeam/warrior-code2.git && chown -r warrior:warrior warrior-code2)
+RUN (cd /home/warrior && git clone -b docker https://github.com/ArchiveTeam/warrior-code2.git && chown -R warrior:warrior warrior-code2)
 
 # Expose web interface port
 EXPOSE 8001
