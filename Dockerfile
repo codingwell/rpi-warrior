@@ -27,8 +27,7 @@ RUN echo "warrior ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN mkdir /home/warrior && chown warrior: /home/warrior
 
 # Clone warrior code
-# The use of sh is to re-taint the shell with qemu
-RUN (cd /home/warrior && sudo -u warrior /bin/sh -c 'git clone -b docker https://github.com/ArchiveTeam/warrior-code2.git')
+RUN (cd /home/warrior && git clone -b docker https://github.com/ArchiveTeam/warrior-code2.git && chown -r warrior:warrior warrior-code2)
 
 # Expose web interface port
 EXPOSE 8001
